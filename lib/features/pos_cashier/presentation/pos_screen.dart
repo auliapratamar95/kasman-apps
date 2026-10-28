@@ -6,6 +6,7 @@ import '../../../core/theme/micro_animations.dart';
 import '../../../shared/utils/currency_formatter.dart';
 import '../models/cart_item_model.dart';
 import '../providers/pos_provider.dart';
+import '../../menu_management/product_form_dialog.dart';
 import 'widgets/animated_product_card.dart';
 import 'widgets/cart_panel.dart';
 import 'widgets/payment_modal.dart';
@@ -203,22 +204,64 @@ class _ProductGrid extends ConsumerWidget {
     final products = state.filteredProducts;
 
     if (products.isEmpty) {
+      final isCatalogEmpty = state.products.isEmpty;
       return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.inventory_2_outlined,
-                size: 48, color: AppColors.textDisabled),
-            SizedBox(height: 12),
-            Text(
-              'Tidak ada produk ditemukan',
-              style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textMuted,
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: const BoxDecoration(
+                  color: AppColors.primaryLight,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.add_business_rounded,
+                  size: 40,
+                  color: AppColors.primary,
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              Text(
+                isCatalogEmpty
+                    ? 'Katalog Produk Masih Bersih'
+                    : 'Tidak ada produk yang cocok dengan pencarian',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                isCatalogEmpty
+                    ? 'Mulai tambahkan produk makanan / minuman Anda secara manual'
+                    : 'Coba ubah kata kunci pencarian atau filter kategori Anda',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: AppColors.textMuted,
+                ),
+              ),
+              if (isCatalogEmpty) ...[
+                const SizedBox(height: 20),
+                ElevatedButton.icon(
+                  onPressed: () => ProductFormDialog.show(context),
+                  icon: const Icon(Icons.add_rounded, size: 18),
+                  label: const Text('Tambah Produk Pertama'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 12),
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
       );
     }
