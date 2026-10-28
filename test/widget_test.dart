@@ -15,6 +15,6 @@ void main() {
       ),
     );
 
-    expect(find.textContaining('Kopi Kasir Modern'), findsOneWidget);
+    expect(find.textContaining('Kasman POS'), findsWidgets);
   });
 }

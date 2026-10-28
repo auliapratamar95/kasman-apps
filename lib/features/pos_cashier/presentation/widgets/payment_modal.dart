@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/micro_animations.dart';
 import '../../../../shared/utils/currency_formatter.dart';
+import '../../../../shared/widgets/brand_logo.dart';
+import '../../../settings/branding_provider.dart';
 import '../../models/order_model.dart';
 import '../../providers/pos_provider.dart';
 
@@ -464,7 +466,7 @@ class _QuickCashChip extends StatelessWidget {
   }
 }
 
-class _ReceiptDialog extends StatelessWidget {
+class _ReceiptDialog extends ConsumerWidget {
   final OrderModel order;
   final double paidAmount;
 
@@ -474,7 +476,8 @@ class _ReceiptDialog extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final branding = ref.watch(storeBrandingProvider);
     final change = (paidAmount - order.grandTotal).clamp(0.0, double.infinity);
 
     return Dialog(
@@ -529,17 +532,26 @@ class _ReceiptDialog extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  const Text(
-                    'KOPI KASIR MODERN',
-                    style: TextStyle(
+                  const BrandLogo(size: 36, borderRadius: 8),
+                  const SizedBox(height: 6),
+                  Text(
+                    branding.storeName.toUpperCase(),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
                       fontWeight: FontWeight.w800,
                       fontSize: 13,
                       letterSpacing: 1.0,
                     ),
                   ),
-                  const Text(
-                    'Jl. Boulevard Barat No. 88, Jakarta',
-                    style: TextStyle(fontSize: 10, color: AppColors.textMuted),
+                  Text(
+                    branding.storeAddress,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
+                  ),
+                  Text(
+                    'Telp: ${branding.storePhone}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 10, color: AppColors.textMuted),
                   ),
                   const SizedBox(height: 8),
                   Row(

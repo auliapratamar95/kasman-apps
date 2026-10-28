@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/micro_animations.dart';
+import '../../shared/widgets/brand_logo.dart';
 import '../pos_cashier/providers/pos_provider.dart';
+import '../settings/branding_provider.dart';
 import 'cashier_pin_lock.dart';
 
 class GoogleLoginScreen extends ConsumerWidget {
@@ -12,6 +14,8 @@ class GoogleLoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final branding = ref.watch(storeBrandingProvider);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Center(
@@ -31,35 +35,12 @@ class GoogleLoginScreen extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // Brand Logo / Icon
-                    Container(
-                      width: 72,
-                      height: 72,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [AppColors.primary, AppColors.teal],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(18),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.primary.withOpacity(0.3),
-                            blurRadius: 16,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.point_of_sale_rounded,
-                        color: Colors.white,
-                        size: 38,
-                      ),
-                    ),
+                    const BrandLogo(size: 72, borderRadius: 18),
                     const SizedBox(height: 24),
-                    const Text(
-                      'Modern POS Kasir',
+                    Text(
+                      branding.storeName,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w800,
                         color: AppColors.textPrimary,
@@ -67,10 +48,10 @@ class GoogleLoginScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Aplikasi Kasir Cloud Multi-Platform\nSetara Majoo / Mekari POS',
+                    Text(
+                      '${branding.storeSubtitle}\nKasman POS Cloud System',
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 14,
                         color: AppColors.textMuted,
                         height: 1.4,

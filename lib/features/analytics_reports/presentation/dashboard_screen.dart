@@ -4,7 +4,10 @@ import '../../../core/responsive/responsive_layout.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/micro_animations.dart';
 import '../../../shared/utils/currency_formatter.dart';
+import '../../../shared/widgets/brand_logo.dart';
 import '../../pos_cashier/providers/pos_provider.dart';
+import '../../settings/branding_dialog.dart';
+import '../../settings/branding_provider.dart';
 import '../widgets/period_filter_bar.dart';
 import '../widgets/profit_modal_pie_chart.dart';
 import '../widgets/top_products_report_table.dart';
@@ -14,6 +17,7 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final branding = ref.watch(storeBrandingProvider);
     final state = ref.watch(posProvider);
     final notifier = ref.read(posProvider.notifier);
     final isDesktop = ResponsiveLayout.isTabletOrDesktop(context);
@@ -38,6 +42,97 @@ class DashboardScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Store White-Label Branding Hero Card
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(18),
+                margin: const EdgeInsets.only(bottom: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.border),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.03),
+                      blurRadius: 10,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 16,
+                  runSpacing: 12,
+                  children: [
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const BrandLogo(size: 56, borderRadius: 14),
+                        const SizedBox(width: 14),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  branding.storeName,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800,
+                                    color: AppColors.textPrimary,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 3),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.primaryLight,
+                                    borderRadius: BorderRadius.circular(6),
+                                  ),
+                                  child: const Text(
+                                    'Kasman POS System',
+                                    style: TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.primary,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 3),
+                            Text(
+                              '${branding.storeSubtitle} • ${branding.storeAddress}',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppColors.textMuted,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    OutlinedButton.icon(
+                      onPressed: () => BrandingDialog.show(context),
+                      icon: const Icon(Icons.palette_outlined, size: 16),
+                      label: const Text('Ganti Logo / Whitelabel'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppColors.primary,
+                        side: const BorderSide(color: AppColors.primary),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 10),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
               // Header & Period Filter
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

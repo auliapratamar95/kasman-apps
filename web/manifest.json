@@ -1,11 +1,11 @@
 {
-    "name": "kasman_apps",
-    "short_name": "kasman_apps",
+    "name": "Kasman Apps - Modern POS",
+    "short_name": "Kasman POS",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#0F172A",
+    "theme_color": "#2563EB",
+    "description": "Aplikasi Kasir (POS) Cloud & Analisis Laba Modern Setara Majoo/Mekari.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

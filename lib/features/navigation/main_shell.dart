@@ -3,12 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/responsive/responsive_layout.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/micro_animations.dart';
+import '../../shared/widgets/brand_logo.dart';
 import '../analytics_reports/presentation/dashboard_screen.dart';
 import '../auth/cashier_pin_lock.dart';
 import '../auth/google_login_screen.dart';
 import '../menu_management/menu_management_screen.dart';
 import '../pos_cashier/presentation/pos_screen.dart';
 import '../pos_cashier/providers/pos_provider.dart';
+import '../settings/branding_dialog.dart';
+import '../settings/branding_provider.dart';
 
 class MainShell extends ConsumerStatefulWidget {
   const MainShell({super.key});
@@ -55,6 +58,7 @@ class _MainShellState extends ConsumerState<MainShell> {
       );
     }
 
+    final branding = ref.watch(storeBrandingProvider);
     final state = ref.watch(posProvider);
     final isDesktop = ResponsiveLayout.isTabletOrDesktop(context);
     final isOwner = state.userRole == 'OWNER';
@@ -80,21 +84,7 @@ class _MainShellState extends ConsumerState<MainShell> {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Container(
-                        width: 34,
-                        height: 34,
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [AppColors.primary, AppColors.teal],
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: const Icon(
-                          Icons.point_of_sale_rounded,
-                          color: Colors.white,
-                          size: 18,
-                        ),
-                      ),
+                      const BrandLogo(size: 34, borderRadius: 10),
                       const SizedBox(width: 10),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,9 +93,9 @@ class _MainShellState extends ConsumerState<MainShell> {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Text(
-                                'Kopi Kasir Modern',
-                                style: TextStyle(
+                              Text(
+                                branding.storeName,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w800,
                                   color: AppColors.textPrimary,
@@ -121,7 +111,7 @@ class _MainShellState extends ConsumerState<MainShell> {
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: const Text(
-                                    'Vercel PWA',
+                                    'Kasman POS',
                                     style: TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.w700,
@@ -133,9 +123,9 @@ class _MainShellState extends ConsumerState<MainShell> {
                             ],
                           ),
                           if (!isCompact)
-                            const Text(
-                              'Cabang Boulevard Barat • Shift Pagi',
-                              style: TextStyle(
+                            Text(
+                              '${branding.storeSubtitle} • Shift Pagi',
+                              style: const TextStyle(
                                 fontSize: 11,
                                 color: AppColors.textMuted,
                               ),
@@ -258,6 +248,16 @@ class _MainShellState extends ConsumerState<MainShell> {
 
                       const SizedBox(width: 8),
 
+                      // Branding & Logo Store Button
+                      IconButton(
+                        tooltip: 'Pengaturan Branding & Logo Toko',
+                        icon: const Icon(Icons.palette_outlined,
+                            color: AppColors.primary, size: 20),
+                        onPressed: () {
+                          BrandingDialog.show(context);
+                        },
+                      ),
+
                       // Quick Lock / Shift Change Button
                       IconButton(
                         tooltip: 'Ganti Shift Kasir (Kunci Layar)',
@@ -316,6 +316,12 @@ class _MainShellState extends ConsumerState<MainShell> {
                     onTap: () => _onNavigationSelect(2),
                   ),
                   const Spacer(),
+                  _SidebarItem(
+                    icon: Icons.palette_outlined,
+                    label: 'Branding Toko',
+                    isSelected: false,
+                    onTap: () => BrandingDialog.show(context),
+                  ),
                   const Divider(),
                   _SidebarItem(
                     icon: Icons.logout_rounded,
